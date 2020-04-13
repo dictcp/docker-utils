@@ -1,5 +1,6 @@
 docker-utils
 ==============
+![docker-utils](https://github.com/dictcp/docker-utils/workflows/docker-utils/badge.svg?branch=master)
 
 A simple docker image with various tools built-in. Example usage:
 
