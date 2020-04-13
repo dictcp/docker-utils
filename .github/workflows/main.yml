@@ -22,10 +22,8 @@ jobs:
         run: echo ${{ steps.buildx.outputs.platforms }}
       -
         name: Docker Login
-        env:
-          DOCKER_PASSWORD: ${{ secrets.DOCKERHUB_PASSWORD }}
         run: |
-          echo "${DOCKERHUB_PASSWORD}" | docker login --username "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
+          docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" -p "${{ secrets.DOCKERHUB_PASSWORD }}"
       -
         name: Run Buildx (alpine)
         run: |
