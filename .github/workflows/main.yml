@@ -1,8 +1,6 @@
 name: docker-utils
 
 on:
-  pull_request:
-    branches: master
   push:
     branches: master
 
@@ -22,6 +20,12 @@ jobs:
       -
         name: Available platforms
         run: echo ${{ steps.buildx.outputs.platforms }}
+      - 
+        name: Docker Login
+        uses: Azure/docker-login@v1
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
       -
         name: Run Buildx (alpine)
         run: |
