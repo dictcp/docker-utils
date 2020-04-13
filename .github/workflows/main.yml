@@ -20,17 +20,17 @@ jobs:
       -
         name: Available platforms
         run: echo ${{ steps.buildx.outputs.platforms }}
-      - 
+      -
         name: Docker Login
-        uses: Azure/docker-login@v1
-        with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+        env:
+          DOCKER_PASSWORD: ${{ secrets.DOCKERHUB_PASSWORD }}
+        run: |
+          echo "${DOCKERHUB_PASSWORD}" | docker login --username "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
       -
         name: Run Buildx (alpine)
         run: |
           docker buildx build \
-            -f Dockerfile.alpine . \
+            --file ./Dockerfile.alpine . \
             --platform linux/amd64,linux/arm/v7,linux/arm64 \
             -t dictcp/utils:alpine \
             --push
@@ -38,7 +38,7 @@ jobs:
         name: Run Buildx (ubuntu)
         run: |
           docker buildx build \
-            -f Dockerfile.ubuntu . \
+            --file ./Dockerfile.ubuntu . \
             --platform linux/amd64,linux/arm/v7,linux/arm64 \
             -t dictcp/utils:ubuntu \
             --push
