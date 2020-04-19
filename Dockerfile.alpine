@@ -1,11 +1,11 @@
-FROM alpine:3.6
+FROM alpine:3.11
 
 RUN apk add --no-cache bash coreutils findutils diffutils grep \
     python gawk sed jq tar unzip git curl wget socat iputils haproxy rsync && \
     curl -o get-pip.py https://bootstrap.pypa.io/get-pip.py && python get-pip.py && rm get-pip.py && \
     pip --no-cache-dir install awscli httpie yq
 
-ENV KUBECTL_VERSION 1.7.0
+ENV KUBECTL_VERSION 1.18.2
 RUN curl -o /usr/local/bin/kubectl https://storage.googleapis.com/kubernetes-release/release/v$KUBECTL_VERSION/bin/linux/amd64/kubectl && \
     chmod +x /usr/local/bin/kubectl
 
