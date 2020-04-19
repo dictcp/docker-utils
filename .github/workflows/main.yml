@@ -28,7 +28,7 @@ jobs:
         name: Run Buildx (ubuntu 18.04)
         run: |
           docker buildx build \
-            --file ./Dockerfile.ubuntu . \
+            --file ./Dockerfile.ubuntu1804 . \
             --platform linux/amd64,linux/arm/v7,linux/arm64 \
             -t dictcp/utils:ubuntu \
             -t dictcp/utils:ubuntu1804 \
