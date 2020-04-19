@@ -50,3 +50,11 @@ jobs:
             --platform linux/amd64,linux/arm/v7,linux/arm64 \
             -t dictcp/utils:ubuntu1604 \
             --push
+      -
+        name: Run Buildx (ubuntu 20.04)
+        run: |
+          docker buildx build \
+            --file ./Dockerfile.ubuntu2004 . \
+            --platform linux/amd64,linux/arm/v7,linux/arm64 \
+            -t dictcp/utils:ubuntu2004 \
+            --push
