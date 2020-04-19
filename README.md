@@ -1,6 +1,8 @@
 docker-utils
 ==============
 ![docker-utils](https://github.com/dictcp/docker-utils/workflows/docker-utils/badge.svg?branch=master)
+![Docker Pulls](https://img.shields.io/docker/pulls/dictcp/utils)
+![Docker Image Size (latest semver)](https://img.shields.io/docker/image-size/dictcp/utils?sort=semver)
 
 A simple docker image with various tools built-in. Example usage:
 
