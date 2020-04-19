@@ -25,6 +25,16 @@ jobs:
         run: |
           docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" -p "${{ secrets.DOCKERHUB_PASSWORD }}"
       -
+        name: Run Buildx (ubuntu 18.04)
+        run: |
+          docker buildx build \
+            --file ./Dockerfile.ubuntu . \
+            --platform linux/amd64,linux/arm/v7,linux/arm64 \
+            -t dictcp/utils:ubuntu \
+            -t dictcp/utils:ubuntu1804 \
+            -t dictcp/utils:latest \
+            --push
+      -
         name: Run Buildx (alpine)
         run: |
           docker buildx build \
@@ -40,13 +50,3 @@ jobs:
             --platform linux/amd64,linux/arm/v7,linux/arm64 \
             -t dictcp/utils:ubuntu1604 \
             --push
-      -
-        name: Run Buildx (ubuntu 18.04)
-        run: |
-          docker buildx build \
-            --file ./Dockerfile.ubuntu . \
-            --platform linux/amd64,linux/arm/v7,linux/arm64 \
-            -t dictcp/utils:ubuntu,dictcp/utils:ubuntu1804,dictcp/utils:latest \
-            --push
-
-
