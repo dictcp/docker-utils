@@ -21,9 +21,13 @@ jobs:
         name: Available platforms
         run: echo ${{ steps.buildx.outputs.platforms }}
       -
-        name: Docker Login
+        name: DockerHub Login
         run: |
           docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" -p "${{ secrets.DOCKERHUB_PASSWORD }}"
+      -
+        name: GitHub CR Login
+        run: |
+          docker login -u "${{ github.actor }}" -p "${{ secrets.GITHUB_TOKEN }} ghcr.io"
       -
         name: Run Buildx (ubuntu 18.04)
         run: |
@@ -33,6 +37,9 @@ jobs:
             -t dictcp/utils:ubuntu \
             -t dictcp/utils:ubuntu1804 \
             -t dictcp/utils:latest \
+            -t ghcr.io/dictcp/utils:ubuntu \
+            -t ghcr.io/dictcp/utils:ubuntu1804 \
+            -t ghcr.io/dictcp/utils:latest \
             --push
       -
         name: Run Buildx (alpine)
