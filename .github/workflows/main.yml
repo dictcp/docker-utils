@@ -27,7 +27,7 @@ jobs:
       -
         name: GitHub CR Login
         run: |
-          docker login -u "${{ github.actor }}" -p "${{ secrets.GITHUB_TOKEN }}" ghcr.io
+          docker login -u "${{ github.actor }}" -p "${{ secrets.GH_PAT }}" ghcr.io
       -
         name: Run Buildx (ubuntu 18.04)
         run: |
