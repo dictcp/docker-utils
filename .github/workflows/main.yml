@@ -27,7 +27,7 @@ jobs:
       -
         name: GitHub CR Login
         run: |
-          docker login -u "${{ github.actor }}" -p "${{ secrets.GH_PAT }}" ghcr.io
+          docker login https://ghcr.io -u "${{ secrets.GH_USERNAME }}" -p "${{ secrets.GH_PAT }}"
       -
         name: Run Buildx (ubuntu 18.04)
         run: |
@@ -48,6 +48,7 @@ jobs:
             --file ./Dockerfile.alpine . \
             --platform linux/amd64,linux/arm/v7,linux/arm64 \
             -t dictcp/utils:alpine \
+            -t ghcr.io/dictcp/utils:alpine \
             --push
       -
         name: Run Buildx (ubuntu 16.04)
@@ -56,6 +57,7 @@ jobs:
             --file ./Dockerfile.ubuntu . \
             --platform linux/amd64,linux/arm/v7,linux/arm64 \
             -t dictcp/utils:ubuntu1604 \
+            -t ghcr.io/dictcp/utils:ubuntu1604 \
             --push
       -
         name: Run Buildx (ubuntu 20.04)
@@ -64,4 +66,5 @@ jobs:
             --file ./Dockerfile.ubuntu2004 . \
             --platform linux/amd64,linux/arm/v7,linux/arm64 \
             -t dictcp/utils:ubuntu2004 \
+            -t ghcr.io/dictcp/utils:ubuntu2004 \
             --push
