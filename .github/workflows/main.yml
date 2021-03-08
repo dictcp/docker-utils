@@ -4,67 +4,77 @@ on:
   push:
     branches: master
 
+name: ci
+
+on:
+  push:
+
 jobs:
   buildx:
     runs-on: ubuntu-latest
     steps:
       -
         name: Checkout
-        uses: actions/checkout@v1
+        uses: actions/checkout@v2
+      -
+        name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
       -
         name: Set up Docker Buildx
         id: buildx
-        uses: crazy-max/ghaction-docker-buildx@v1
-        with:
-          version: latest
+        uses: docker/setup-buildx-action@v1
       -
         name: Available platforms
         run: echo ${{ steps.buildx.outputs.platforms }}
       -
-        name: DockerHub Login
-        run: |
-          docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" -p "${{ secrets.DOCKERHUB_PASSWORD }}"
+        name: Login to Docker Hub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
       -
-        name: GitHub CR Login
-        run: |
-          docker login https://ghcr.io -u "${{ secrets.GH_USERNAME }}" -p "${{ secrets.GH_PAT }}"
+        name: Login to GitHub Container Registry
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ secrets.GH_USERNAME }}
+          password: ${{ secrets.GH_PAT }}
       -
-        name: Run Buildx (ubuntu 18.04)
-        run: |
-          docker buildx build \
-            --file ./Dockerfile.ubuntu1804 . \
-            --platform linux/amd64,linux/arm/v7,linux/arm64 \
-            -t dictcp/utils:ubuntu \
-            -t dictcp/utils:ubuntu1804 \
-            -t dictcp/utils:latest \
-            -t ghcr.io/dictcp/utils:ubuntu \
-            -t ghcr.io/dictcp/utils:ubuntu1804 \
-            -t ghcr.io/dictcp/utils:latest \
-            --push
+        name: Build and push (ubuntu2004)
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          file: Dockerfile.ubuntu2004
+          platforms: linux/amd64,linux/arm64,linux/arm/v7
+          push: true
+          tags: |
+            dictcp/utils:latest,ghcr.io/dictcp/utils:latest
+            dictcp/utils:ubuntu,ghcr.io/dictcp/utils:ubuntu
+            dictcp/utils:ubuntu2004,ghcr.io/dictcp/utils:ubuntu2004
       -
-        name: Run Buildx (alpine)
-        run: |
-          docker buildx build \
-            --file ./Dockerfile.alpine . \
-            --platform linux/amd64,linux/arm/v7,linux/arm64 \
-            -t dictcp/utils:alpine \
-            -t ghcr.io/dictcp/utils:alpine \
-            --push
+        name: Build and push (ubuntu1804)
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          file: Dockerfile.ubuntu1804
+          platforms: linux/amd64,linux/arm64,linux/arm/v7
+          push: true
+          tags: dictcp/utils:ubuntu1804,ghcr.io/dictcp/utils:ubuntu1804
       -
-        name: Run Buildx (ubuntu 16.04)
-        run: |
-          docker buildx build \
-            --file ./Dockerfile.ubuntu . \
-            --platform linux/amd64,linux/arm/v7,linux/arm64 \
-            -t dictcp/utils:ubuntu1604 \
-            -t ghcr.io/dictcp/utils:ubuntu1604 \
-            --push
+        name: Build and push (ubuntu1604)
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          file: Dockerfile.ubuntu
+          platforms: linux/amd64,linux/arm64,linux/arm/v7
+          push: true
+          tags: dictcp/utils:ubuntu1604,ghcr.io/dictcp/utils:ubuntu1604
       -
-        name: Run Buildx (ubuntu 20.04)
-        run: |
-          docker buildx build \
-            --file ./Dockerfile.ubuntu2004 . \
-            --platform linux/amd64,linux/arm/v7,linux/arm64 \
-            -t dictcp/utils:ubuntu2004 \
-            -t ghcr.io/dictcp/utils:ubuntu2004 \
-            --push
+        name: Build and push (alpine)
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          file: Dockerfile.alpine
+          platforms: linux/amd64,linux/arm64,linux/arm/v7
+          push: true
+          tags: dictcp/utils:alpine,ghcr.io/dictcp/utils:alpine
