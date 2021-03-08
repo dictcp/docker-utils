@@ -4,11 +4,6 @@ on:
   push:
     branches: master
 
-name: ci
-
-on:
-  push:
-
 jobs:
   buildx:
     runs-on: ubuntu-latest
