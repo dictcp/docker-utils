@@ -27,7 +27,7 @@ jobs:
           image-ref: 'docker.io/dictcp/utils:${{ github.sha }}'
           format: 'table'
           vuln-type: 'os,library'
-          severity: 'CRITICAL,HIGH'
+          severity: 'CRITICAL,HIGH,MEDIUM,LOW'
 
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@master
