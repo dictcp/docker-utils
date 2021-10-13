@@ -1,4 +1,4 @@
-FROM alpine:3.11
+FROM alpine:3.14
 
 RUN apk add --no-cache bash coreutils findutils diffutils grep \
     python3 gawk sed jq tar unzip git curl wget socat iputils haproxy rsync && \
