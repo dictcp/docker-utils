@@ -35,6 +35,16 @@ jobs:
           username: ${{ github.repository_owner }}
           password: ${{ secrets.CR_PAT }}
       -
+        name: Build and push (ubuntu2110)
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          file: Dockerfile.ubuntu2110
+          platforms: linux/amd64,linux/arm64,linux/arm/v7,linux/riscv64
+          push: true
+          tags: |
+            dictcp/utils:ubuntu2110,ghcr.io/dictcp/utils:ubuntu2110
+      -
         name: Build and push (ubuntu2004)
         uses: docker/build-push-action@v2
         with:
