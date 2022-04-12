@@ -3,6 +3,8 @@ name: docker-utils
 on:
   push:
     branches: master
+  schedule:
+    - cron: '21 3 * * 0' # weekly build
 
 jobs:
   buildx:
