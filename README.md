@@ -20,5 +20,5 @@ Supported tags and respective Dockerfile links
 Supported arch
 ----
 - x86-64
-- armv7
+- ~armv7~
 - armv8
