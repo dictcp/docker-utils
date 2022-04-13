@@ -68,15 +68,6 @@ jobs:
           push: true
           tags: dictcp/utils:ubuntu1804,ghcr.io/dictcp/utils:ubuntu1804
       -
-        name: Build and push (ubuntu1604)
-        uses: docker/build-push-action@v2
-        with:
-          context: .
-          file: Dockerfile.ubuntu1604
-          platforms: linux/amd64,linux/arm64
-          push: true
-          tags: dictcp/utils:ubuntu1604,ghcr.io/dictcp/utils:ubuntu1604
-      -
         name: Build and push (alpine)
         uses: docker/build-push-action@v2
         with:
