@@ -45,6 +45,8 @@ jobs:
           platforms: linux/amd64,linux/arm64
           push: true
           tags: |
+            dictcp/utils:latest,ghcr.io/dictcp/utils:latest
+            dictcp/utils:ubuntu,ghcr.io/dictcp/utils:ubuntu
             dictcp/utils:ubuntu2204,ghcr.io/dictcp/utils:ubuntu2204
       -
         name: Build and push (ubuntu2004)
@@ -55,8 +57,6 @@ jobs:
           platforms: linux/amd64,linux/arm64
           push: true
           tags: |
-            dictcp/utils:latest,ghcr.io/dictcp/utils:latest
-            dictcp/utils:ubuntu,ghcr.io/dictcp/utils:ubuntu
             dictcp/utils:ubuntu2004,ghcr.io/dictcp/utils:ubuntu2004
       -
         name: Build and push (ubuntu1804)
