@@ -37,6 +37,18 @@ jobs:
           username: ${{ github.repository_owner }}
           password: ${{ secrets.CR_PAT }}
       -
+        name: Build and push (ubuntu2404)
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          file: Dockerfile.ubuntu2404
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: |
+            dictcp/utils:latest,ghcr.io/dictcp/utils:latest
+            dictcp/utils:ubuntu,ghcr.io/dictcp/utils:ubuntu
+            dictcp/utils:ubuntu2404,ghcr.io/dictcp/utils:ubuntu2404
+      -
         name: Build and push (ubuntu2204)
         uses: docker/build-push-action@v2
         with:
@@ -45,8 +57,6 @@ jobs:
           platforms: linux/amd64,linux/arm64
           push: true
           tags: |
-            dictcp/utils:latest,ghcr.io/dictcp/utils:latest
-            dictcp/utils:ubuntu,ghcr.io/dictcp/utils:ubuntu
             dictcp/utils:ubuntu2204,ghcr.io/dictcp/utils:ubuntu2204
       -
         name: Build and push (ubuntu2004)
