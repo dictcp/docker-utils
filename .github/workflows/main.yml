@@ -12,6 +12,7 @@ jobs:
     strategy:
       matrix:
         target: [ubuntu2404, ubuntu2204, ubuntu2004, ubuntu1804, alpine]
+      fail-fast: false
     # end matrix magic
     runs-on: ubuntu-latest
     steps:
