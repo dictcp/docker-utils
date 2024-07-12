@@ -8,6 +8,11 @@ on:
 
 jobs:
   buildx:
+    # matrix magic
+    strategy:
+      matrix:
+        target: [ubuntu2404, ubuntu2204, ubuntu2004, ubuntu1804, alpine]
+    # end matrix magic
     runs-on: ubuntu-latest
     steps:
       -
@@ -37,52 +42,13 @@ jobs:
           username: ${{ github.repository_owner }}
           password: ${{ secrets.CR_PAT }}
       -
-        name: Build and push (ubuntu2404)
+        name: Build and push (${{ matrix.target }})
         uses: docker/build-push-action@v2
         with:
           context: .
-          file: Dockerfile.ubuntu2404
+          file: Dockerfile.${{ matrix.target }}
           platforms: linux/amd64,linux/arm64
           push: true
           tags: |
-            dictcp/utils:latest,ghcr.io/dictcp/utils:latest
-            dictcp/utils:ubuntu,ghcr.io/dictcp/utils:ubuntu
-            dictcp/utils:ubuntu2404,ghcr.io/dictcp/utils:ubuntu2404
-      -
-        name: Build and push (ubuntu2204)
-        uses: docker/build-push-action@v2
-        with:
-          context: .
-          file: Dockerfile.ubuntu2204
-          platforms: linux/amd64,linux/arm64
-          push: true
-          tags: |
-            dictcp/utils:ubuntu2204,ghcr.io/dictcp/utils:ubuntu2204
-      -
-        name: Build and push (ubuntu2004)
-        uses: docker/build-push-action@v2
-        with:
-          context: .
-          file: Dockerfile.ubuntu2004
-          platforms: linux/amd64,linux/arm64
-          push: true
-          tags: |
-            dictcp/utils:ubuntu2004,ghcr.io/dictcp/utils:ubuntu2004
-      -
-        name: Build and push (ubuntu1804)
-        uses: docker/build-push-action@v2
-        with:
-          context: .
-          file: Dockerfile.ubuntu1804
-          platforms: linux/amd64,linux/arm64
-          push: true
-          tags: dictcp/utils:ubuntu1804,ghcr.io/dictcp/utils:ubuntu1804
-      -
-        name: Build and push (alpine)
-        uses: docker/build-push-action@v2
-        with:
-          context: .
-          file: Dockerfile.alpine
-          platforms: linux/amd64,linux/arm64
-          push: true
-          tags: dictcp/utils:alpine,ghcr.io/dictcp/utils:alpine
+            dictcp/utils:${{ matrix.target }},ghcr.io/dictcp/utils:${{ matrix.target }}
+            ${{ matrix.target == 'ubuntu2404' && 'dictcp/utils:latest,ghcr.io/dictcp/utils:latest,dictcp/utils:ubuntu,ghcr.io/dictcp/utils:ubuntu' || '' }}
