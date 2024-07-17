@@ -1,4 +1,4 @@
-name: docker-utils
+name: build-image-and-push
 
 on:
   push:
