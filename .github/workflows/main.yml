@@ -3,6 +3,9 @@ name: build-image-and-push
 on:
   push:
     branches: master
+    paths:
+      - 'Dockerfile*'
+      - '.github/workflows/**'
   schedule:
     - cron: '21 3 * * 0' # weekly build
 
