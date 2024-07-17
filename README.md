@@ -22,5 +22,5 @@ Supported tags and respective Dockerfile links
 Supported arch
 ----
 - x86-64 (aka. `linux/amd64` platform in Docker)
-- ~armv7~
+- armv7 (aka. `linux/amd/v7` platform in Docker)
 - armv8 (aka. `linux/arm64` platform in Docker)
