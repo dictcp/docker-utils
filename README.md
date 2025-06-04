@@ -15,8 +15,8 @@ Supported tags and respective Dockerfile links
 ----
 - [`ubuntu2404`, `ubuntu`, `latest`](https://github.com/dictcp/docker-utils/blob/master/Dockerfile.ubuntu2404)
 - [`ubuntu2204`](https://github.com/dictcp/docker-utils/blob/master/Dockerfile.ubuntu2204)
-- [`ubuntu2004`](https://github.com/dictcp/docker-utils/blob/master/Dockerfile.ubuntu2004)
-- [`ubuntu1804`](https://github.com/dictcp/docker-utils/blob/master/Dockerfile.ubuntu1804)
+- ~~[`ubuntu2004`](https://github.com/dictcp/docker-utils/blob/master/Dockerfile.ubuntu2004)~~
+- ~~[`ubuntu1804`](https://github.com/dictcp/docker-utils/blob/master/Dockerfile.ubuntu1804)~~
 - [`alpine`](https://github.com/dictcp/docker-utils/blob/master/Dockerfile.alpine)
 
 Supported arch
