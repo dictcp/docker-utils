@@ -51,7 +51,7 @@ jobs:
         with:
           context: .
           file: Dockerfile.${{ matrix.target }}
-          platforms: linux/amd64,linux/arm64,linux/arm/v7
+          platforms: linux/amd64,linux/arm64,linux/arm/v7,linux/riscv64
           push: true
           tags: |
             dictcp/utils:${{ matrix.target }},ghcr.io/dictcp/utils:${{ matrix.target }}
