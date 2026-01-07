@@ -9,50 +9,65 @@ on:
   schedule:
     - cron: '21 3 * * 0' # weekly build
 
+env:
+  IMAGE_REPOS: |
+    dictcp/utils
+    ghcr.io/dictcp/utils
+
 jobs:
   buildx:
     # matrix magic
     strategy:
       matrix:
-        target: [ubuntu2404, ubuntu2204, alpine]
+        target: [full, ubuntu2404, ubuntu2204, alpine]
       fail-fast: false
     # end matrix magic
     runs-on: ubuntu-latest
     steps:
       -
         name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v6
       -
         name: Set up QEMU
-        uses: docker/setup-qemu-action@v1
+        uses: docker/setup-qemu-action@v3
       -
         name: Set up Docker Buildx
         id: buildx
-        uses: docker/setup-buildx-action@v1
+        uses: docker/setup-buildx-action@v3
       -
         name: Available platforms
         run: echo ${{ steps.buildx.outputs.platforms }}
       -
         name: Login to Docker Hub
-        uses: docker/login-action@v1
+        uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
       -
         name: Login to GitHub Container Registry
-        uses: docker/login-action@v1
+        uses: docker/login-action@v3
         with:
           registry: ghcr.io
           username: ${{ github.repository_owner }}
           password: ${{ secrets.CR_PAT }}
       -
+        name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.IMAGE_REPOS }}
+          tags: |
+            type=raw,value=${{ matrix.target }}
+            type=raw,value=latest,enable=${{ matrix.target == 'ubuntu2404' }}
+            type=raw,value=lite,enable=${{ matrix.target == 'ubuntu2404' }}
+            type=raw,value=ubuntu,enable=${{ matrix.target == 'ubuntu2404' }}
+      -
         name: Build and push (${{ matrix.target }})
-        uses: docker/build-push-action@v2
+        uses: docker/build-push-action@v6
         with:
           context: .
           file: Dockerfile.${{ matrix.target }}
           platforms: linux/amd64,linux/arm64,linux/arm/v7,linux/riscv64
           push: true
-          tags: |
-            dictcp/utils:${{ matrix.target }},ghcr.io/dictcp/utils:${{ matrix.target }}
-            ${{ matrix.target == 'ubuntu2404' && 'dictcp/utils:latest,ghcr.io/dictcp/utils:latest,dictcp/utils:ubuntu,ghcr.io/dictcp/utils:ubuntu' || '' }}
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}

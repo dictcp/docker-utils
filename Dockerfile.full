@@ -1,0 +1,15 @@
+FROM golang:1.25.5-trixie
+
+RUN apt-get update && \
+    DEBIAN_FRONTEND=noninteractive apt-get -y install \
+    gawk sed jq tar unzip git curl wget \
+    redir socat traceroute net-tools iproute2 iputils-ping mtr-tiny iperf3 \
+    haproxy rsync httpie \
+    python3-minimal ca-certificates && \
+    rm -rf /var/lib/apt/lists/*
+
+RUN go install github.com/pufferffish/wireproxy/cmd/wireproxy@v1.0.9
+
+RUN go install tailscale.com/cmd/derper@latest
+
+RUN go install github.com/ameshkov/sniproxy@v1.6.1
