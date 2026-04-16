@@ -20,7 +20,7 @@ jobs:
     # matrix magic
     strategy:
       matrix:
-        target: [full, ubuntu2404, ubuntu2204, alpine]
+        target: [full, ubuntu2604, ubuntu2404, ubuntu2204, alpine]
       fail-fast: false
     # end matrix magic
     runs-on: ubuntu-latest
@@ -59,9 +59,9 @@ jobs:
           images: ${{ env.IMAGE_REPOS }}
           tags: |
             type=raw,value=${{ matrix.target }}
-            type=raw,value=latest,enable=${{ matrix.target == 'ubuntu2404' }}
-            type=raw,value=lite,enable=${{ matrix.target == 'ubuntu2404' }}
-            type=raw,value=ubuntu,enable=${{ matrix.target == 'ubuntu2404' }}
+            type=raw,value=latest,enable=${{ matrix.target == 'ubuntu2604' }}
+            type=raw,value=lite,enable=${{ matrix.target == 'ubuntu2604' }}
+            type=raw,value=ubuntu,enable=${{ matrix.target == 'ubuntu2604' }}
       -
         name: Build and push (${{ matrix.target }})
         uses: docker/build-push-action@v6
