@@ -2,5 +2,5 @@ FROM alpine:3.22
 
 RUN apk add --no-cache bash coreutils findutils diffutils grep \
     python3 gawk sed jq tar unzip git curl wget socat iputils net-tools haproxy rsync && \
-    curl -o get-pip.py https://bootstrap.pypa.io/get-pip.py && python3 get-pip.py && rm get-pip.py && \
+    curl -o get-pip.py https://bootstrap.pypa.io/get-pip.py && python3 get-pip.py --break-system-packages && rm get-pip.py && \
     pip --no-cache-dir --break-system-packages install awscli httpie yq
