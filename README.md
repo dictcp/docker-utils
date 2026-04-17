@@ -1,6 +1,8 @@
 docker-utils
 ==============
-![docker-utils](https://github.com/dictcp/docker-utils/workflows/docker-utils/badge.svg?branch=master)
+
+> ℹ️ Crafted for Personal Use · Best Effort Basis.
+
 
 A simple docker image with various tools built-in. Example usage:
 
@@ -10,11 +12,13 @@ docker run --rm -it ghcr.io/dictcp/utils /bin/bash
 
 Supported tags and respective Dockerfile links
 ----
+- [`ubuntu2604`](https://github.com/dictcp/docker-utils/blob/master/Dockerfile.ubuntu2604)
 - [`ubuntu2404`, `ubuntu`, `latest`](https://github.com/dictcp/docker-utils/blob/master/Dockerfile.ubuntu2404)
 - [`ubuntu2204`](https://github.com/dictcp/docker-utils/blob/master/Dockerfile.ubuntu2204)
-- ~~[`ubuntu2004`](https://github.com/dictcp/docker-utils/blob/master/Dockerfile.ubuntu2004)~~
-- ~~[`ubuntu1804`](https://github.com/dictcp/docker-utils/blob/master/Dockerfile.ubuntu1804)~~
+- ~~`ubuntu2004`~~ EOLed
+- ~~`ubuntu1804`~~ EOLed
 - [`alpine`](https://github.com/dictcp/docker-utils/blob/master/Dockerfile.alpine)
+- [`full`](https://github.com/dictcp/docker-utils/blob/master/Dockerfile.full) : bundles more utilities for my own use case
 
 Supported arch
 ----
