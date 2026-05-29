@@ -1,4 +1,10 @@
-FROM golang:1.26.3-trixie
+FROM golang:1.26.3-trixie AS builder
+
+RUN go install github.com/windtf/wireproxy/cmd/wireproxy@v1.1.2
+RUN go install tailscale.com/cmd/derper@latest
+RUN go install github.com/ameshkov/sniproxy@v1.6.1
+
+FROM ubuntu:26.04
 
 RUN apt-get update && \
     DEBIAN_FRONTEND=noninteractive apt-get -y install \
@@ -8,8 +14,6 @@ RUN apt-get update && \
     python3-minimal ca-certificates && \
     rm -rf /var/lib/apt/lists/*
 
-RUN go install github.com/windtf/wireproxy/cmd/wireproxy@v1.1.2
-
-RUN go install tailscale.com/cmd/derper@latest
-
-RUN go install github.com/ameshkov/sniproxy@v1.6.1
+COPY --from=builder /root/go/bin/wireproxy /usr/local/bin/
+COPY --from=builder /root/go/bin/derper /usr/local/bin/
+COPY --from=builder /root/go/bin/sniproxy /usr/local/bin/
