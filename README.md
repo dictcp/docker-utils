@@ -23,6 +23,6 @@ Supported tags and respective Dockerfile links
 Supported arch
 ----
 - x86-64 (aka. `linux/amd64` platform in Docker)
-- armv7 (aka. `linux/amd/v7` platform in Docker)
 - armv8 (aka. `linux/arm64` platform in Docker)
-- riscv64 (aka `linux/riscv64` platform in Docker)
+- armv7 (aka. `linux/amd/v7` platform in Docker) **ONLY for ubuntu 26.04**
+- riscv64 (aka `linux/riscv64` platform in Docker) **ONLY for ubuntu 26.04**
