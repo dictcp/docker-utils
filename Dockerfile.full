@@ -1,4 +1,4 @@
-FROM golang:1.26.2-trixie
+FROM golang:1.26.3-trixie
 
 RUN apt-get update && \
     DEBIAN_FRONTEND=noninteractive apt-get -y install \
@@ -8,7 +8,7 @@ RUN apt-get update && \
     python3-minimal ca-certificates && \
     rm -rf /var/lib/apt/lists/*
 
-RUN go install github.com/pufferffish/wireproxy/cmd/wireproxy@v1.0.9
+RUN go install github.com/pufferffish/wireproxy/cmd/wireproxy@v1.1.2
 
 RUN go install tailscale.com/cmd/derper@latest
 
