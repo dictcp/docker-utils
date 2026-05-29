@@ -4,7 +4,7 @@ RUN go install github.com/windtf/wireproxy/cmd/wireproxy@v1.1.2
 RUN go install tailscale.com/cmd/derper@latest
 RUN go install github.com/ameshkov/sniproxy@v1.6.1
 
-FROM ubuntu:26.04
+FROM debian:trixie-slim
 
 RUN apt-get update && \
     DEBIAN_FRONTEND=noninteractive apt-get -y install \
