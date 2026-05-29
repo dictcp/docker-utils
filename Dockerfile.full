@@ -8,7 +8,7 @@ RUN apt-get update && \
     python3-minimal ca-certificates && \
     rm -rf /var/lib/apt/lists/*
 
-RUN go install github.com/pufferffish/wireproxy/cmd/wireproxy@v1.1.2
+RUN go install github.com/windtf/wireproxy/cmd/wireproxy@v1.1.2
 
 RUN go install tailscale.com/cmd/derper@latest
 
