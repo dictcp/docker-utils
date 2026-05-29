@@ -12,8 +12,8 @@ docker run --rm -it ghcr.io/dictcp/utils /bin/bash
 
 Supported tags and respective Dockerfile links
 ----
-- [`ubuntu2604`](https://github.com/dictcp/docker-utils/blob/master/Dockerfile.ubuntu2604)
-- [`ubuntu2404`, `ubuntu`, `latest`](https://github.com/dictcp/docker-utils/blob/master/Dockerfile.ubuntu2404)
+- [`ubuntu2604`, `ubuntu`, `latest`](https://github.com/dictcp/docker-utils/blob/master/Dockerfile.ubuntu2604)
+- [`ubuntu2404`](https://github.com/dictcp/docker-utils/blob/master/Dockerfile.ubuntu2404)
 - [`ubuntu2204`](https://github.com/dictcp/docker-utils/blob/master/Dockerfile.ubuntu2204)
 - ~~`ubuntu2004`~~ EOLed
 - ~~`ubuntu1804`~~ EOLed
