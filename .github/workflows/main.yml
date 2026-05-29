@@ -166,6 +166,11 @@ jobs:
 
   merge:
     needs: [build-amd64, build-arm, build-riscv]
+    if: |
+      always() &&
+      needs.build-amd64.result == 'success' &&
+      needs.build-arm.result == 'success' &&
+      (matrix.target != 'ubuntu2604' || needs.build-riscv.result == 'success')
     strategy:
       matrix:
         target: [full, ubuntu2604, ubuntu2404, ubuntu2204, alpine]
