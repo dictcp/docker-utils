@@ -165,15 +165,10 @@ jobs:
           retention-days: 1
 
   merge:
-    needs: [build-amd64, build-arm, build-riscv]
-    if: |
-      always() &&
-      needs.build-amd64.result == 'success' &&
-      needs.build-arm.result == 'success' &&
-      (matrix.target != 'ubuntu2604' || needs.build-riscv.result == 'success')
+    needs: [build-amd64, build-arm]
     strategy:
       matrix:
-        target: [full, ubuntu2604, ubuntu2404, ubuntu2204, alpine]
+        target: [full, ubuntu2404, ubuntu2204, alpine]
       fail-fast: false
     runs-on: ubuntu-latest
     steps:
@@ -195,9 +190,6 @@ jobs:
           images: ${{ env.IMAGE_NAME }}
           tags: |
             type=raw,value=${{ matrix.target }}
-            type=raw,value=latest,enable=${{ matrix.target == 'ubuntu2604' }}
-            type=raw,value=lite,enable=${{ matrix.target == 'ubuntu2604' }}
-            type=raw,value=ubuntu,enable=${{ matrix.target == 'ubuntu2604' }}
       -
         name: Login to GitHub Container Registry
         uses: docker/login-action@v3
@@ -215,3 +207,46 @@ jobs:
         name: Inspect image
         run: |
           docker buildx imagetools inspect ${{ env.IMAGE_NAME }}:${{ steps.meta.outputs.version }}
+
+  merge-ubuntu2604:
+    needs: [build-amd64, build-arm, build-riscv]
+    runs-on: ubuntu-latest
+    steps:
+      -
+        name: Download digests
+        uses: actions/download-artifact@v4
+        with:
+          path: /tmp/digests
+          pattern: digests-*-ubuntu2604
+          merge-multiple: true
+      -
+        name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      -
+        name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.IMAGE_NAME }}
+          tags: |
+            type=raw,value=ubuntu2604
+            type=raw,value=latest
+            type=raw,value=lite
+            type=raw,value=ubuntu
+      -
+        name: Login to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.CR_PAT }}
+      -
+        name: Create manifest list and push
+        working-directory: /tmp/digests
+        run: |
+          docker buildx imagetools create $(jq -cr '.tags | map("-t " + .) | join(" ")' <<< "$DOCKER_METADATA_OUTPUT_JSON") \
+            $(printf '${{ env.IMAGE_NAME }}@sha256:%s ' *)
+      -
+        name: Inspect image
+        run: |
+          docker buildx imagetools inspect ${{ env.IMAGE_NAME }}:ubuntu2604
