@@ -1,7 +1,7 @@
 FROM golang:1.26.3-trixie AS builder
 
 RUN go install github.com/windtf/wireproxy/cmd/wireproxy@v1.1.2
-RUN go install tailscale.com/cmd/derper@latest
+RUN go install tailscale.com/cmd/derper@v1.98.8
 RUN go install github.com/ameshkov/sniproxy@v1.6.1
 
 FROM debian:trixie-slim
