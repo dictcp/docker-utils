@@ -7,5 +7,3 @@
 - To update a graph, enter its directory and run `go get <module>@<version>` followed by `go mod tidy`. Verify its source release stays pinned. Pre-1.0 libraries can break APIs across minor versions.
 - The DNS integration check is `node tests/sniproxy-smoke.ts /path/to/sniproxy`. It uses loopback sockets and a local DNS stub to verify UDP/TCP rewriting, upstream forwarding, and graceful shutdown without contacting the public network.
 - Upstream wireproxy configuration tests and Tailscale DERP command tests run against these graphs. Container CLI and DNS checks validate the final image.
-
-- The Ubuntu 26.04 recipe separately rebuilds Canonical Pebble v1.33.2 with Go 1.27.3. Its base-image copy was compiled with Go 1.27.1; the stable upstream update addresses those standard-library advisories without changing the target OS.
