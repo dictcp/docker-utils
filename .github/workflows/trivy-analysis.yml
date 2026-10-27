@@ -1,46 +1,44 @@
-name: build
+name: Container vulnerability scan
 
 on:
   push:
-    branches: [ master ]
+    branches: [master]
   pull_request:
-    # The branches below must be a subset of the branches above
-    branches: [ master ]
+    branches: [master]
   schedule:
     - cron: '37 14 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: read
 
 jobs:
-  build:
-    name: Build
-    runs-on: "ubuntu-18.04"
+  scan:
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+      security-events: write
+    strategy:
+      fail-fast: false
+      matrix:
+        target: [alpine, full, ubuntu2204, ubuntu2404, ubuntu2604]
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: Build an image from Dockerfile
-        run: |
-          docker build -f ./Dockerfile.ubuntu2004 -t docker.io/dictcp/utils:${{ github.sha }} .
-
-      - name: Run Trivy vulnerability scanner
-        uses: aquasecurity/trivy-action@master
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Build current image
+        run: docker build --pull -f "Dockerfile.${{ matrix.target }}" -t "utils-audit:${{ matrix.target }}" .
+      - name: Scan vulnerabilities
+        uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
         with:
-          image-ref: 'docker.io/dictcp/utils:${{ github.sha }}'
-          format: 'table'
-          vuln-type: 'os,library'
-          severity: 'CRITICAL,HIGH,MEDIUM,LOW'
-
-      - name: Run Trivy vulnerability scanner
-        uses: aquasecurity/trivy-action@master
+          version: v0.76.1
+          image-ref: 'utils-audit:${{ matrix.target }}'
+          format: sarif
+          output: trivy-results.sarif
+          scanners: vuln
+          severity: 'CRITICAL,HIGH,MEDIUM,LOW,UNKNOWN'
+          exit-code: '0'
+      - name: Upload findings
+        if: always() && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository)
+        uses: github/codeql-action/upload-sarif@9b3254085494b55a0f7c4c2b3d2d52cc712ce370 # v4.39.1
         with:
-          image-ref: 'docker.io/dictcp/utils:${{ github.sha }}'
-          format: 'template'
-          template: '@/contrib/sarif.tpl'
-          output: 'trivy-results.sarif'
-          vuln-type: 'os,library'
-          severity: 'CRITICAL,HIGH'
-
-
-      - name: Upload Trivy scan results to GitHub Security tab
-        uses: github/codeql-action/upload-sarif@v1
-        with:
-          sarif_file: 'trivy-results.sarif'
+          sarif_file: trivy-results.sarif
+          category: 'container-${{ matrix.target }}'
