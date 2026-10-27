@@ -1,0 +1,61 @@
+--- a/internal/dnsproxy/dnsproxy.go
++++ b/internal/dnsproxy/dnsproxy.go
+@@ -3,6 +3,7 @@
+ package dnsproxy
+ 
+ import (
++	"context"
+ 	"fmt"
+ 	"io"
+ 	"net"
+@@ -43,10 +44,11 @@
+ 		redirectIPv6To: cfg.RedirectIPv6To,
+ 		dropRules:      cfg.DropRules,
+ 	}
+-	d.proxy = &proxy.Proxy{
+-		Config: proxyConfig,
++	proxyConfig.RequestHandler = proxy.HandlerFunc(d.requestHandler)
++	d.proxy, err = proxy.New(&proxyConfig)
++	if err != nil {
++		return nil, fmt.Errorf("dnsproxy: creating proxy: %w", err)
+ 	}
+-	d.proxy.RequestHandler = d.requestHandler
+ 
+ 	return d, nil
+ }
+@@ -55,7 +57,7 @@
+ func (d *DNSProxy) Start() (err error) {
+ 	log.Info("dnsproxy: starting")
+ 
+-	err = d.proxy.Start()
++	err = d.proxy.Start(context.Background())
+ 
+ 	log.Info("dnsproxy: started successfully")
+ 
+@@ -66,7 +68,7 @@
+ func (d *DNSProxy) Close() (err error) {
+ 	log.Info("dnsproxy: stopping")
+ 
+-	err = d.proxy.Stop()
++	err = d.proxy.Shutdown(context.Background())
+ 
+ 	log.Info("dnsproxy: stopped")
+ 
+@@ -75,7 +77,7 @@
+ 
+ // requestHandler is a [proxy.RequestHandler] implementation which purpose is
+ // to implement the actual redirection logic.
+-func (d *DNSProxy) requestHandler(p *proxy.Proxy, ctx *proxy.DNSContext) (err error) {
++func (d *DNSProxy) requestHandler(requestCtx context.Context, p *proxy.Proxy, ctx *proxy.DNSContext) (err error) {
+ 	qName := strings.ToLower(ctx.Req.Question[0].Name)
+ 	qType := ctx.Req.Question[0].Qtype
+ 
+@@ -103,7 +105,7 @@
+ 		return nil
+ 	}
+ 
+-	return p.Resolve(ctx)
++	return p.Resolve(requestCtx, ctx)
+ }
+ 
+ // rewrite rewrites the specified query and redirects the response to the
