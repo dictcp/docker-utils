@@ -1,8 +1,25 @@
-FROM golang:1.26.3-trixie AS builder
+FROM golang:1.27.3-trixie AS builder
 
-RUN go install github.com/windtf/wireproxy/cmd/wireproxy@v1.1.2
-RUN go install tailscale.com/cmd/derper@v1.98.8
-RUN go install github.com/ameshkov/sniproxy@v1.6.1
+WORKDIR /build/wireproxy
+COPY go-tools/wireproxy/go.mod go-tools/wireproxy/go.sum ./
+RUN --mount=type=cache,target=/go/pkg/mod --mount=type=cache,target=/root/.cache/go-build \
+    go build -mod=readonly -trimpath -o /go/bin/wireproxy github.com/windtf/wireproxy/cmd/wireproxy
+
+WORKDIR /build/derper
+COPY go-tools/derper/go.mod go-tools/derper/go.sum ./
+RUN --mount=type=cache,target=/go/pkg/mod --mount=type=cache,target=/root/.cache/go-build \
+    go build -mod=readonly -trimpath -o /go/bin/derper tailscale.com/cmd/derper
+
+WORKDIR /build/sniproxy
+COPY go-tools/sniproxy/go.mod go-tools/sniproxy/go.sum ./
+COPY patches/sniproxy-v1.6.1-dnsproxy.patch ./
+RUN --mount=type=cache,target=/go/pkg/mod --mount=type=cache,target=/root/.cache/go-build \
+    go mod download github.com/ameshkov/sniproxy@v1.6.1 && \
+    cp -a "$(go env GOMODCACHE)/github.com/ameshkov/sniproxy@v1.6.1" ./upstream && \
+    chmod -R u+w ./upstream && \
+    git apply --directory=upstream sniproxy-v1.6.1-dnsproxy.patch && \
+    go mod edit -replace=github.com/ameshkov/sniproxy=./upstream && \
+    go build -mod=readonly -trimpath -o /go/bin/sniproxy github.com/ameshkov/sniproxy
 
 FROM debian:trixie-slim
 
